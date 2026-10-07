@@ -4,131 +4,81 @@ export class Calculator {
 
     constructor(input: unknown[]) {
 
-        this.rejected = [];
-        this.values = [];
-    
-        for (let i = 0; i < input.length; i++)
-        {
-            if (typeof(input[i]) === 'number')
-            {
-                if (Number.isNaN(input[i]))
-                {
-                    console.log("Argument " + (i + 1) + " is not a number. " + "Value " + JSON.stringify(input[i]) + " is of type: " + input[i]);
-                    this.rejected.push(input[i]);
+        this.values = input.filter(
+            (value, index): value is number => {
+                if (typeof value === "number" && !Number.isNaN(value)) {
+                    return true;
                 }
-                else
-                {
-                    this.values.push(input[i] as number);
-                }
-                
-            } 
-            else
-            {
-                console.log("Argument " + (i + 1) + " is not a number. " + "Value " + JSON.stringify(input[i]) + " is of type: " + typeof(input[i]));
-                this.rejected.push(input[i]);
+
+                console.log(
+                    "Argument " + (index + 1) + " is not a number." + " Value " + JSON.stringify(value) + " is of type: " + value
+                );
+
+                return false;
             }
-        }
+        );
+
+        this.rejected = input.filter(
+            (value) => 
+                typeof value !== "number" || Number.isNaN(value)
+        );
     }
 
     add(): number {
 
-        let total : number = 0;
-
-        for (let i of this.values)
-        {
-            total += i;
-        }
-
-        return total;
+        return this.values.reduce(
+            (total, value) => total + value,
+            0
+        );
     }
 
     subtract(): number {
 
-        let total = 0;
+        if (this.values.length === 0)
+        {
+            return 0;
+        }
 
         if (this.values.length === 1)
         {
-            total -= this.values[0] as number;
-        }
-        else if (this.values.length > 1)
-        {
-            total += this.values[0] as number;
-
-            let first : boolean = true;
-
-            for (let i of this.values)
-            {
-                if (first)
-                {
-                    first = false;
-                }
-                else
-                {
-                    total -= i;
-                }
-            }
+            return -(this.values[0] as number);
         }
 
-        return total;
+        return this.values.slice(1).reduce(
+            (total, value) => total - value,
+            this.values[0] as number
+        );
     }
 
     multiply(): number {
 
-        let total : number = 0;
-
-        if (this.values.length === 1)
-        {
-            total = this.values[0] as number;
-        }
-        else if (this.values.length > 1)
-        {
-
-            total = 1;
-
-            for (let i of this.values)
-            {
-                total *= i;
-            }
+        if (this.values.length === 0) {
+            return 0;
         }
 
-        return total;
+        return this.values.reduce(
+            (total, value) => total * value,
+            1
+        );
     }
 
     divide(): number{
 
-        let total : number = 0;
-
-        if (this.values.length === 1)
+        if (this.values.length === 0)
         {
-            total = this.values[0] as number;
-        }
-        else if (this.values.length > 1)
-        {
-
-            total = this.values[0] as number;
-
-            let first : boolean = true;
-
-            for (let i of this.values)
-            {
-                if (first)
-                {
-                    first = false;
-                }
-                else
-                {
-                    if (i === 0)
-                    {
-                        console.log("Error: Division by zero, skipping value...");
-                    }
-                    else
-                    {
-                        total /= i;
-                    }
-                }
-            }
+            return 0;
         }
 
-        return total;
+        return this.values.slice(1).reduce(
+            (total, value) => {
+                if (value === 0) {
+                    console.log("Error: Division by zero, skipping value...");
+                    return total;
+                };
+
+                return total/value;
+            },
+            this.values[0] as number
+        );
     }
 }
