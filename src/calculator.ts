@@ -1,6 +1,6 @@
 export class Calculator {
     private readonly values: number[] = [];
-    private readonly rejected: unknown[] = [];
+    private readonly rejected: [unknown, number][] = [];
 
     constructor(input: unknown[]) {
 
@@ -18,9 +18,15 @@ export class Calculator {
             }
         );
 
-        this.rejected = input.filter(
-            (value) => 
-                typeof value !== "number" || Number.isNaN(value)
+        this.rejected = input.reduce(
+            (rejected: [unknown, number][], value, index) => {
+                if (typeof value !== "number" || Number.isNaN(value)) {
+                    rejected.push([value, index]);
+                }
+
+                return rejected;
+            },
+            []
         );
     }
 
@@ -80,5 +86,9 @@ export class Calculator {
             },
             this.values[0] as number
         );
+    }
+
+    rejectedValues() : [unknown, number][] {
+        return this.rejected;
     }
 }
