@@ -91,4 +91,79 @@ export class Calculator {
     rejectedValues() : [unknown, number][] {
         return this.rejected;
     }
+
+    max(): number {
+
+        if (this.values.length === 0)
+        {
+            return NaN;
+        }
+        else if (this.values.length === 1)
+        {
+            return this.values[0] as number;
+        }
+        else {  
+            let temp : number = this.values[0] as number;
+
+            for (let i = 0; i < this.values.length; i++)
+            {
+                if (this.values[i] as number > temp)
+                {
+                    temp = this.values[i] as number;
+                }
+            }
+
+            return temp;
+        }
+        
+    }
+
+    min(): number {
+
+        if (this.values.length === 0)
+        {
+            return NaN;
+        }
+        else if (this.values.length === 1)
+        {
+            return this.values[0] as number;
+        }
+        else {  
+            let temp : number = this.values[0] as number;
+
+            for (let i = 0; i < this.values.length; i++)
+            {
+                if (this.values[i] as number < temp)
+                {
+                    temp = this.values[i] as number;
+                }
+            }
+
+            return temp;
+        }
+        
+    }
+
+    mean() : number {
+        if (this.values.length === 0)
+        {
+            return NaN;
+        }
+        else if (this.values.length === 1)
+        {
+            return this.values[0] as number;
+        }
+        else
+        {
+            let temp : number = 0;
+            for (let i = 0; i < this.values.length; i++)
+            {
+                temp += this.values[i] as number;
+            }
+
+            return (temp / this.values.length);
+        }
+    }
+
+    
 }
